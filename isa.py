@@ -1,15 +1,28 @@
-
-
 import time
 import sys
 import math
+
+opening = '''
+                INTERNATIONAL STANDARD ATMOSPHERE
+                            CALCULATOR
+                -------------------------------------
+        This program took away 13 hours from someone's life 
+                            
+            '''
+for letter in opening:
+    print(letter,end='',flush=True)
+    time.sleep(0.08)
+
 
 R = 287.05
 g = 9.8
 gamma = 1.4
 
 try:
-    height = float(input('Enter height  :  '))
+    height = float(input('Enter height for atmosphere calculation  :  '))
+    if height <0:
+        print( print('Enter only positive numbers ',end = '' , flush = True))
+        time.sleep(0.08)
 
     
 except ValueError:
@@ -68,14 +81,14 @@ def height_conversion(height):
             
     
 
-def gradient_layer_1():
+def troposphere():
 
     message = '''
                 This height falls in layer that goes 0km to 11km above the sea level.
-                Temperature at sea level is  15 degrees which which is 288.16K.
+                It is called troposphere
                 In this layer temperature goes on decreasing (negative temp gradient).
                 
-                temp_sea_level = 288.16 K
+                temp_sea_level = 288.15 K
                 lapse_rate = -6.5e-3 K/m
                 pressure_sea_level = 101325 Pa
                 density_sea_level = 1.225 kg/m**3
@@ -85,7 +98,7 @@ def gradient_layer_1():
        print(letter , end = '' , flush = True)
        time.sleep(0.08)
         
-    temp_sea_level = 288.16
+    temp_sea_level = 288.15
     lapse_rate = -6.5e-3
     pressure_sea_level = 101325
     density_sea_level = 1.225
@@ -124,17 +137,17 @@ def gradient_layer_1():
 
 
 
-def isothermal_layer_1():
+def tropopause():
 
     message_ = '''
-                This height falls in layer that goes 11km to 25km 
-                above the sea level and it is called the isothermal.
+                This height falls in layer that goes 11km to 20km 
+                above the sea level and it is called Tropopause.
                 In this layer temperature tends to be the same throughout.
                 
-                temp_reference = 216.66 K
+                temp_reference = 216.65 K
                 lapse_rate = 0 K/m
-                pressure_reference  =  22656.06 Pa
-                density_reference = 0.36 kg/m**3
+                pressure_reference  =  22632.06 Pa
+                density_reference = 0.3639 kg/m**3
                 reference_height = 11000 m
     '''
     
@@ -145,23 +158,28 @@ def isothermal_layer_1():
     # call the height conversion function to make same units 
     height_conversion(height)
         
-    temp_reference = 216.66 
+    temp_reference = 216.65
     pressure_initial  =  22632.06 
-    density_reference = 0.36 
+    density_reference = 0.3639
     reference_height = 11000
     
     print(' ')
     # starting pressure calculation
-    height_change = height_required - 11000.0
-    
+    height_change = height_required - reference_height
+
+    print()
+    print()
     pressure_at_height = pressure_initial*math.exp(-(height_change*g)/(R*temp_reference))
     print(f'pressure at {height_required} is {pressure_at_height} Pa',end='',flush=True)
     time.sleep(0.08)
-    
+
+    print()
+    print()
     density_at_height = pressure_at_height/(R*temp_reference)
     print(f'density of air at {height_required} m is {density_at_height} kg/m**3 ', end='' ,flush = True)
     time.sleep(0.08)
     
+    print()
     print()
     velocity_at_height = (gamma*R*temp_reference)**(1/2)
     print(f'Velocity of air at {height_required} is {velocity_at_height:.2f} m/s', end='',flush=True)
@@ -172,17 +190,17 @@ def isothermal_layer_1():
     
        
 
-def gradient_layer_2():
+def lower_stratosphere():
 
     message = '''
-                This height falls in layer that goes 25km to 47km above the sea level.
-                Temperature reference at this level is 216.666K.
+                This height falls in layer that goes 20km to 32km above the sea level.
+                It is called lower stratosphere
                 In this layer temperature goes on increasing (positive temp gradient).
                 
-                temp_reference = 216.66 K
-                lapse_rate = 3e-3 K/m
-                pressure_reference = 2518.18 Pa
-                reference height = 25000 m
+                temperature reference = 216.65 K
+                lapse rate = 0.001 K/m
+                pressure reference = 5474.89 Pa
+                reference height = 20000 m
                 
     '''
     
@@ -190,9 +208,9 @@ def gradient_layer_2():
        print(letter , end = '' , flush = True)
        time.sleep(0.08)
         
-    temp_reference = 216.66
-    lapse_rate = 3e-3 
-    pressure_reference = 2518.18
+    temp_reference = 216.65
+    lapse_rate = 0.001 
+    pressure_reference = 5474.89
     
     # call the height conversion function to make same units 
     height_conversion(height)
@@ -201,7 +219,63 @@ def gradient_layer_2():
     print()
     print()
     # starting temperature calculation
-    height_difference = height_required - 25000.0
+    height_difference = height_required - 20000.0
+    temp_at_height = temp_reference + lapse_rate*height_difference
+    print(f'temperature at {height} m is {temp_at_height:.2f} kelvin',end='',flush=True)
+    time.sleep(0.08)
+    
+    print()
+    print()
+    #starting calculating pressure
+    pressure_at_height = pressure_reference*(temp_at_height/temp_reference)**(-g/(lapse_rate*R))
+    print(f'pressure at {height_required} is {pressure_at_height:.2f} Pa',end='',flush=True)
+    time.sleep(0.08)
+    
+    print()
+    print()
+    density_at_height = pressure_at_height/(R*temp_at_height)
+    print(f'density of air at {height_required} is {density_at_height:.4f} kg/m**3',end='',flush=True)
+    time.sleep(0.08)
+    
+    print()
+    print()
+    velocity_at_height = (gamma*R*temp_at_height)**(1/2)
+    print(f'Velocity of air at {height_required} is {velocity_at_height:.2f} m/s', end='',flush=True)
+    time.sleep(0.08)
+    print()
+    print()
+
+
+def upper_stratosphere():
+
+    message = '''
+                This height falls in layer that goes 32km to 47km above the sea level.
+                In this layer temperature goes on increasing (positive temp gradient).
+                It is called upper stratosphere
+                
+                temp_reference = 228.65 K
+                lapse_rate = 2.8e-3 K/m
+                pressure_reference = 868.2 Pa
+                reference height = 32000 m
+                
+    '''
+    
+    for letter in message:
+       print(letter , end = '' , flush = True)
+       time.sleep(0.08)
+        
+    temp_reference = 228.65
+    lapse_rate = 2.8e-3 
+    pressure_reference = 868.2
+    
+    # call the height conversion function to make same units 
+    height_conversion(height)
+    
+    
+    print()
+    print()
+    # starting temperature calculation
+    height_difference = height_required - 20000.0
     temp_at_height = temp_reference + lapse_rate*height_difference
     print(f'temperature at {height} m is {temp_at_height:.2f} kelvin',end='',flush=True)
     time.sleep(0.08)
@@ -228,14 +302,15 @@ def gradient_layer_2():
     print()
     
 
-def isothermal_layer_2():
+
+def stratopause():
 
     message_ = '''
-                This height falls in layer that goes 47km to 53km 
-                above the sea level and it is called the isothermal.
+                This height falls in layer that goes 47km to 51km 
+                above the sea level and it is called the Stratopause.
                 In this layer temperature tends to be the same throughout.
                 
-                temp_reference = 282.66 K
+                temp_reference = 270.65 K
                 lapse_rate = 0 K/m
                 pressure_reference  =  110.91 Pa
                 reference_height = 47000 m
@@ -253,18 +328,23 @@ def isothermal_layer_2():
     reference_height = 47000
     
     print(' ')
+    print()
     # starting pressure calculation
     height_change = height_required - reference_height
-    
+
+    print()
+    print()
     pressure_at_height = pressure_initial*math.exp(-(height_change*g)/(R*temp_reference))
     print(f'pressure at {height_required} is {pressure_at_height:.2f} Pa',end='',flush=True)
     time.sleep(0.08)
     
     print()
+    print()
     density_at_height = pressure_at_height/(R*temp_reference)
     print(f'density of air at {height_required} m is {density_at_height:.4f} kg/m**3 ', end='' ,flush = True)
     time.sleep(0.08)
     
+    print()
     print()
     velocity_at_height = (gamma*R*temp_reference)**(1/2)
     print(f'Velocity of air at {height_required} is {velocity_at_height:.2f} m/s', end='',flush=True)
@@ -273,17 +353,17 @@ def isothermal_layer_2():
     print()
     
     
-def gradient_layer_3():
+def lower_mesosphere():
 
     message = '''
-                This height falls in layer that goes 53km to 79km above the sea level.
-                Temperature reference at this level is 282.66K.
+                This height falls in layer that goes 51km to 71km above the sea level.
                 In this layer temperature goes on decreasing (negative temp gradient).
+                It is called lower mesosphere
                 
-                temp_reference = 282.66 K
-                lapse_rate = -4.5e-3 K/m
-                pressure_reference = 51.87 Pa
-                reference height = 53000 m
+                temp_reference = 270.65 K
+                lapse_rate = -2.8e-3 K/m
+                pressure_reference = 66.94 Pa
+                reference height = 51000 m
                 
     '''
     
@@ -330,62 +410,74 @@ def gradient_layer_3():
     print()
  
 
-def isothermal_layer_3():
+def upper_mesosphere():
 
-    message_ = '''
-                This height falls in layer that goes 79km to 90km 
-                above the sea level and it is called the isothermal.
-                In this layer temperature tends to be the same throughout.
+    message = '''
+                This height falls in layer that goes 71km to 84km above the sea level.
+                In this layer temperature goes on decreasing (negative temp gradient).
+                It is called upper mesosphere
                 
-                temp_reference = 165.66 K
-                lapse_rate = 0 K/m
-                pressure_reference  =  1.23 Pa
-                reference_height = 79000 m
+                temp_reference = 214.65 K
+                lapse_rate = -2e-3 K/m
+                pressure_reference = 3.96Pa
+                reference height = 51000 m
+                
     '''
     
-    for letter in message_:
-        print(letter,end='',flush=True)
-        time.sleep(0.08)
+    for letter in message:
+       print(letter , end = '' , flush = True)
+       time.sleep(0.08)
+        
+    temp_reference = 214.65
+    lapse_rate = -2e-3 
+    pressure_reference = 51.87
+    reference_height = 71000
     
     # call the height conversion function to make same units 
     height_conversion(height)
-        
-    temp_reference = 165.66 
-    pressure_initial  =  1.23 
-    reference_height = 79000
     
-    print(' ')
-    # starting pressure calculation
-    height_change = height_required - reference_height
     
-    pressure_at_height = pressure_initial*math.exp(-(height_change*g)/(R*temp_reference))
-    print(f'pressure at {height_required} is {pressure_at_height:.3f} Pa',end='',flush=True)
+    print()
+    print()
+    # starting temperature calculation
+    height_difference = height_required - reference_height
+    temp_at_height = temp_reference + lapse_rate*height_difference
+    print(f'temperature at {height} m is {temp_at_height:.2f} kelvin',end='',flush=True)
     time.sleep(0.08)
     
     print()
-    density_at_height = pressure_at_height/(R*temp_reference)
-    print(f'density of air at {height_required} m is {density_at_height:.8f} kg/m**3 ', end='' ,flush = True)
+    print()
+    #starting calculating pressure
+    pressure_at_height = pressure_reference*(temp_at_height/temp_reference)**(-g/(lapse_rate*R))
+    print(f'pressure at {height_required} is {pressure_at_height:.2f} Pa',end='',flush=True)
     time.sleep(0.08)
     
     print()
-    velocity_at_height = (gamma*R*temp_reference)**(1/2)
-    print(f'Velocity of air at {height_required} is {velocity_at_height:.3f} m/s', end='',flush=True)
+    print()
+    density_at_height = pressure_at_height/(R*temp_at_height)
+    print(f'density of air at {height_required} is {density_at_height:.4f} kg/m**3',end='',flush=True)
+    time.sleep(0.08)
+    
+    print()
+    print()
+    velocity_at_height = (gamma*R*temp_at_height)**(1/2)
+    print(f'Velocity of air at {height_required} is {velocity_at_height:.2f} m/s', end='',flush=True)
     time.sleep(0.08)
     print()
     print()
-  
 
-def gradient_layer_4():
+
+def uppermost_layer():
 
     message = '''
-                This height falls in layer that goes 90km plus above the sea level.
-                Temperature reference at this level is 165.66K.
-                In this layer temperature goes on increasing (positive temp gradient).
+                This height falls in layer that goes 84km plus above the sea level.
+                In this layer temperature does not follow any particular equation
+                It is called upper atmosphere
                 
-                temp_reference = 165.66 K
-                lapse_rate = 4e-3 K/m
+                temp_reference = 186.95 K
+                lapse_rate = not contant
                 pressure_reference = 0.184 Pa
-                reference height = 90000 m
+                reference height = 84000 m
                 
     '''
     
@@ -434,22 +526,37 @@ height_required = height_conversion(height)
  
 # initiating layers
 if height_required >= 0.0 and height_required <= 11000.0:
-    gradient_layer_1()       
+    troposphere()     
     
-elif height_required > 11000.0 and height_required <= 25000.0:
-    isothermal_layer_1()
+elif height_required > 11000.0 and height_required <= 20000.0:
+    tropopause()
     
-elif height_required > 25000.0 and height_required <=47000.0:
-    gradient_layer_2()
-    
-elif height_required > 47000.0 and height_required <= 53000.0:
-    isothermal_layer_2()
-    
-elif height_required > 53000.0 and height_required <= 79000.0:
-    gradient_layer_3()
+elif height_required > 20000.0 and height_required <=32000.0:
+    lower_stratosphere()
 
-elif height_required > 79000.0 and height_required <= 90000.0:
-    isothermal_layer_3()
+elif height_required > 32000.0 and height_required <=47000.0:
+    upper_stratosphere()
+    
+elif height_required > 47000.0 and height_required <= 51000.0:
+    stratopause()
+    
+elif height_required > 51000.0 and height_required <= 71000.0:
+    lower_mesosphere()
+
+elif height_required > 71000.0 and height_required <= 84000.0:
+    upper_mesosphere()
  
-elif height_required > 90000.0:
-    gradient_layer_4() 
+elif height_required > 84000.0:
+    uppermost_layer()
+
+
+closing = '''    --------------------------
+                  ISA CALCULATOR 
+                     Version 1
+            Developed by Eliudi Elphace Tonda
+                     05 September 2026
+        ---------------------------------------
+                     '''
+for letter in closing:
+    print(letter,end='',flush=True)
+    time.sleep(0.08)
